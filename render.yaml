@@ -1,0 +1,13 @@
+# Render Blueprint: one free static site serving this folder as-is.
+# In Render: New -> Blueprint -> pick this repo -> Apply.
+services:
+  - type: web
+    name: oasis-spaces
+    runtime: static
+    buildCommand: echo "nothing to build"
+    staticPublishPath: .
+    pullRequestPreviewsEnabled: false
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate
