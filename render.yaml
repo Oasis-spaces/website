@@ -11,3 +11,10 @@ services:
       - path: /*
         name: Cache-Control
         value: public, max-age=0, must-revalidate
+      - path: /health
+        name: Cache-Control
+        value: no-store
+    routes:
+      - type: rewrite
+        source: /health
+        destination: /health.json

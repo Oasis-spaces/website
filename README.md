@@ -18,6 +18,11 @@ then open http://localhost:8735.
 Hosted on Render as a free static site from `render.yaml` (publish path `.`,
 nothing to build). Every push to `main` deploys.
 
+## Health check
+
+`/health` (also `/health.json`) returns `{"status":"ok"}` with HTTP 200 — point
+uptime monitors at it.
+
 ## Suggestion box
 
 The form at the bottom opens the visitor's mail app addressed to
