@@ -9,7 +9,7 @@ export const clamp = THREE.MathUtils.clamp;
 export const easeOut = (t) => 1 - Math.pow(1 - clamp(t, 0, 1), 3);
 export const easeInOut = (t) => { t = clamp(t, 0, 1); return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
 
-export function createScene(canvas, theme, view = {}) {
+export function createScene(canvas, theme, view = {}, { closed = false } = {}) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(DPR);
   renderer.setClearColor(0x000000, 0);
@@ -21,12 +21,13 @@ export function createScene(canvas, theme, view = {}) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 80);
   const mats = makeMaterials(theme);
-  const room = buildRoom(mats);
+  const room = buildRoom(mats, { closed });
   scene.add(room.group);
 
   scene.add(new THREE.HemisphereLight(0xfff6ea, 0x9a8b78, 0.9));
   const sun = new THREE.DirectionalLight(0xfff0dc, 2.3);
-  sun.position.set(3.2, 6.5, 4.2);
+  // from the open corner of the dollhouse; from high above when every wall is there
+  if (closed) sun.position.set(0.9, 7, 0.7); else sun.position.set(3.2, 6.5, 4.2);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
   Object.assign(sun.shadow.camera, { left: -4.2, right: 4.2, top: 4.2, bottom: -4.2, near: 1, far: 22 });

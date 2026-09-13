@@ -254,7 +254,7 @@ export function buildItem(type, mats) {
 // ---------------------------------------------------------------------- room
 // Three sides of a room seen like a dollhouse: floor, back wall with a window,
 // left wall. The two sides nearest the camera are left open.
-export function buildRoom(m) {
+export function buildRoom(m, { closed = false } = {}) {
   const { w, d, h } = ROOM;
   const g = new THREE.Group();
   const t = 0.08; // wall thickness
@@ -285,6 +285,13 @@ export function buildRoom(m) {
   // skirting
   g.add(rbox(m.skirting, 0.015, 0.1, d, -w / 2 + 0.0075, 0, 0, 0.004, 'wall'));
   g.add(rbox(m.skirting, w, 0.1, 0.015, 0, 0, -d / 2 + 0.0075, 0.004, 'wall'));
+  if (closed) {
+    // the two sides the dollhouse leaves open, for a camera standing inside
+    g.add(rbox(m.wall, t, h, d + t, w / 2 + t / 2, 0, -t / 2, 0.01, 'wall'));
+    g.add(rbox(m.wall, w + 2 * t, h, t, 0, 0, d / 2 + t / 2, 0.01, 'wall'));
+    g.add(rbox(m.skirting, 0.015, 0.1, d, w / 2 - 0.0075, 0, 0, 0.004, 'wall'));
+    g.add(rbox(m.skirting, w, 0.1, 0.015, 0, 0, d / 2 - 0.0075, 0.004, 'wall'));
+  }
 
   // a soft contact shadow so the room sits on the page rather than floating
   const c = document.createElement('canvas');

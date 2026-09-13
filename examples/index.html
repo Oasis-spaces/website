@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Examples — Oasis-spaces</title>
+<meta name="description" content="A room, start to finish: the phone walk-through on one side, the rebuilt and restyled 3D room on the other.">
+<meta name="theme-color" content="#F1F2ED">
+<link rel="canonical" href="https://www.oasis-spaces.info/examples/">
+<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="manifest" href="../site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.oasis-spaces.info/examples/">
+<meta property="og:site_name" content="Oasis-spaces">
+<meta property="og:title" content="Examples — Oasis-spaces">
+<meta property="og:description" content="A room, start to finish: the walk-through and the rebuilt, restyled result.">
+<meta property="og:image" content="https://www.oasis-spaces.info/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.oasis-spaces.info/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+<script type="importmap">
+{"imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+}}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav is-solid" id="nav">
+  <div class="wrap nav__row">
+    <a class="wordmark" href="../" aria-label="Oasis-spaces, home"><img class="wordmark__mark" src="../logo-mark.png" alt="" width="32" height="32"><span class="wordmark__name">Oasis<em>-</em>spaces</span></a>
+    <nav class="nav__links" id="nav-links" aria-label="Sections">
+      <a href="../#how">How it works</a>
+      <a href="../#editor">Editor</a>
+      <a href="../#redesign">Redesign</a>
+      <a href="./" aria-current="page">Examples</a>
+      <a href="../#faq">FAQ</a>
+      <a class="nav__links-cta" href="../#suggest">Send a suggestion</a>
+    </nav>
+    <a class="btn btn--ink btn--sm nav__cta" href="../#suggest">Send a suggestion</a>
+    <button class="nav__toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+      <span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="examples">
+  <div class="wrap">
+    <div class="section__head section__head--split">
+      <div>
+        <p class="eyebrow reveal">Examples</p>
+        <h1 class="display-2 reveal" style="--d:.1s">One room, start to finish.</h1>
+      </div>
+      <p class="body reveal" style="--d:.2s">On the left, what the phone sees. On the right, what comes back: the room rebuilt from that video, to scale, and then restyled. This is the example room the previews on the home page use; real captures will take its place here as we film them.</p>
+    </div>
+
+    <article class="example reveal" style="--d:.15s">
+      <div class="example__side example__side--video">
+        <p class="example__label"><span class="num">01</span>The walk-through</p>
+        <div class="phone">
+          <div class="phone__screen" id="walk-stage">
+            <canvas id="walk-canvas" aria-label="A simulated phone video walking through a bedroom"></canvas>
+            <div class="rec"><span class="rec__dot"></span>REC <span id="walk-clock">00:00</span></div>
+            <div class="phone__bar"><i id="walk-bar"></i></div>
+          </div>
+        </div>
+        <p class="stage__caption">A slow loop of the room at eye height, walls and floor in frame. Simulated; a real phone video goes here.</p>
+      </div>
+
+      <div class="example__side example__side--result">
+        <p class="example__label"><span class="num">02</span>The result</p>
+        <div class="stage stage--wide" id="result-stage">
+          <canvas id="result-canvas" aria-label="The same room rebuilt from scan points, then restyled"></canvas>
+          <div class="stage__status"><span class="dot"></span><span id="result-status">Reading frames</span></div>
+        </div>
+        <p class="stage__caption">Scan points settle onto the floor and walls, then the furniture; the solid room fades in, then a restyle is applied. Loops on its own.</p>
+        <dl class="example__facts">
+          <div><dt>Input</dt><dd>26 s phone video</dd></div>
+          <div><dt>Room</dt><dd>4.4 × 3.8 m, measured</dd></div>
+          <div><dt>Found</dt><dd>Bed, wardrobe, armchair, bedside table, floor lamp, plant, rug</dd></div>
+        </dl>
+      </div>
+    </article>
+
+    <p class="examples__more reveal">More rooms will appear here as they are captured. Have one you would like to see rebuilt? <a href="../#suggest">Tell us</a>.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <a class="wordmark" href="../"><img class="wordmark__mark" src="../logo-mark.png" alt="" width="32" height="32"><span class="wordmark__name">Oasis<em>-</em>spaces</span></a>
+      <p class="foot__tag">Film your room once. Redesign it in 3D.</p>
+    </div>
+    <nav aria-label="Footer">
+      <a href="../#how">How it works</a>
+      <a href="../#editor">Editor</a>
+      <a href="../#redesign">Redesign</a>
+      <a href="./">Examples</a>
+      <a href="../#faq">FAQ</a>
+      <a href="../#suggest">Suggestions</a>
+      <a href="mailto:contact@oasis-spaces.info">contact@oasis-spaces.info</a>
+    </nav>
+    <small>© 2026 Oasis-spaces · Launching soon</small>
+  </div>
+</footer>
+
+<script type="module" src="../main.js"></script>
+</body>
+</html>

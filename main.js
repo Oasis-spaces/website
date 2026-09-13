@@ -2,7 +2,9 @@
 // three 3D scenes, which are created when they come near the viewport and
 // only render while they are on screen.
 import { createHero } from './hero.js';
+import { THEMES } from './room.js';
 import { createEditor, createRedesign } from './editor.js';
+import { createWalkthrough } from './walkthrough.js';
 
 // Where suggestions go. With no endpoint, the form opens the visitor's mail
 // app addressed to CONTACT with the suggestion filled in. To collect them
@@ -58,7 +60,7 @@ else {
 
 // ---------------------------------------------------------------- form
 const form = $('#suggest-form');
-form.addEventListener('submit', async (e) => {
+form?.addEventListener('submit', async (e) => {
   e.preventDefault();
   if (!form.reportValidity()) return;
   const data = Object.fromEntries(new FormData(form));
@@ -163,4 +165,12 @@ mount('editor-stage', (canvas, stage) => {
 mount('redesign-stage', (canvas, stage) => createRedesign(canvas, {
   compare: $$('.compare button', stage), chips: $$('#redesign-styles .chip'),
   title: $('#suggest-title'), text: $('#suggest-text'), list: $('#suggest-list'),
+}));
+
+// ------------------------------------------------- the examples page
+mount('walk-stage', (canvas) => createWalkthrough(canvas, {
+  clock: $('#walk-clock'), bar: $('#walk-bar'),
+}));
+mount('result-stage', (canvas) => createHero(canvas, { status: $('#result-status') }, {
+  loop: 7500, restyle: THEMES.warm,
 }));

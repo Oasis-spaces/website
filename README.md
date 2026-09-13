@@ -1,3 +1,5 @@
+<img src="logo-mark.png" alt="Oasis-spaces" width="72">
+
 # Oasis-spaces — website
 
 The public site for Oasis-spaces: *Film your room once. Redesign it in 3D.*
@@ -17,6 +19,13 @@ then open http://localhost:8735.
 
 Hosted on Render as a free static site from `render.yaml` (publish path `.`,
 nothing to build). Every push to `main` deploys.
+
+## Logo
+
+`logo.png` is the master (1254 px, on its own off-white ground). `logo-mark.png`
+is the transparent cutout used in the header and footer; `icons/`,
+`apple-touch-icon.png` and `og-image.png` are generated from it for favicons,
+the home-screen icon (`site.webmanifest`) and link previews.
 
 ## Health check
 

@@ -4,7 +4,7 @@
 import * as THREE from 'three';
 import { MeshSurfaceSampler } from 'three/addons/math/MeshSurfaceSampler.js';
 import { createScene, easeOut, clamp } from './scene.js';
-import { THEMES, LAYOUTS, buildItem, tickMaterials } from './room.js';
+import { THEMES, LAYOUTS, buildItem, tickMaterials, setTheme } from './room.js';
 
 const PHASES = [
   [0.0, 'Reading frames'],
@@ -87,7 +87,9 @@ function buildCloud(meshes, total) {
   return { points, start, target, delay, pos: posAttr, count: k };
 }
 
-export function createHero(canvas, ui) {
+// opts.loop: milliseconds to hold the finished room before replaying.
+// opts.restyle: a theme to fade the finished room into (the "redesigned" beat).
+export function createHero(canvas, ui = {}, opts = {}) {
   const S = createScene(canvas, THEMES.original);
   for (const it of LAYOUTS.original) {
     const g = buildItem(it.type, S.mats);
@@ -103,8 +105,9 @@ export function createHero(canvas, ui) {
   S.scene.add(cloud.points);
   const contact = S.room.group.children.find((o) => o.userData.part === 'contact');
 
-  let t0 = null, phase = -1, done = false;
-  const status = ui.status, pill = ui.status.parentElement;
+  let t0 = null, phase = -1, done = false, doneAt = 0, restyled = false;
+  const status = ui.status || null, pill = status ? status.parentElement : null;
+  const say = (text) => { if (status) status.textContent = text; };
 
   function setOpacity(o) {
     for (const m of Object.values(S.mats)) {
@@ -119,11 +122,12 @@ export function createHero(canvas, ui) {
 
   function finish() {
     done = true;
+    doneAt = performance.now();
     setOpacity(1);
     setShadows(true);
     cloud.points.visible = false;
-    status.textContent = PHASES[PHASES.length - 1][1];
-    pill.classList.add('is-done');
+    say(PHASES[PHASES.length - 1][1]);
+    pill?.classList.add('is-done');
   }
 
   function start() {
@@ -137,7 +141,8 @@ export function createHero(canvas, ui) {
     cloud.pos.needsUpdate = true;
     setOpacity(0);
     setShadows(false);
-    pill.classList.remove('is-done');
+    pill?.classList.remove('is-done');
+    if (restyled) { setTheme(S.mats, THEMES.original); restyled = false; }
   }
 
   function animateCloud(t) {
@@ -161,12 +166,21 @@ export function createHero(canvas, ui) {
       animateCloud(t);
       let p = 0;
       for (let i = 0; i < PHASES.length; i++) if (t >= PHASES[i][0]) p = i;
-      if (p !== phase) { phase = p; status.textContent = PHASES[p][1]; }
+      if (p !== phase) { phase = p; say(PHASES[p][1]); }
       if (t >= FADE_START) {
         setOpacity(clamp((t - FADE_START) / FADE_DUR, 0, 1));
         if (t >= FADE_START + 0.35) setShadows(true);
       }
       if (t >= END) finish();
+    } else if (done && opts.loop) {
+      const held = now - doneAt;
+      if (opts.restyle && !restyled && held > 2600) {
+        restyled = true;
+        setTheme(S.mats, opts.restyle);
+        say(`Restyled: ${opts.restyle.name}`);
+        pill?.classList.remove('is-done');
+      }
+      if (held > opts.loop) start();
     }
     // a slow look around while idle, plus a little parallax from the pointer
     S.orbit.azBase = 0.62 + Math.sin(now / 9000) * 0.05;
