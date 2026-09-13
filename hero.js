@@ -15,7 +15,7 @@ const PHASES = [
 ];
 const FADE_START = 3.0, FADE_DUR = 0.9, END = 4.2;
 
-function dotTexture() {
+export function dotTexture() {
   const c = document.createElement('canvas');
   c.width = c.height = 64;
   const ctx = c.getContext('2d');
@@ -41,54 +41,65 @@ function meshArea(mesh) {
   return area;
 }
 
-// Sample the surfaces of every mesh, remembering where each point came from.
-function buildCloud(meshes, total) {
+// Points spread over the surfaces of every mesh, in proportion to area, each
+// remembering which mesh it came from. World space; meshes must be placed.
+export function samplePoints(meshes, total) {
   const areas = meshes.map(meshArea);
   const sum = areas.reduce((s, v) => s + v, 0);
-  const target = new Float32Array(total * 3), start = new Float32Array(total * 3);
-  const color = new Float32Array(total * 3), delay = new Float32Array(total);
+  const target = new Float32Array(total * 3), color = new Float32Array(total * 3);
+  const owner = new Uint16Array(total);
   const p = new THREE.Vector3(), n = new THREE.Vector3();
-  const rng = () => Math.random();
   let k = 0;
   meshes.forEach((mesh, mi) => {
     const count = mi === meshes.length - 1 ? total - k : Math.round(total * areas[mi] / sum);
     if (count <= 0) return;
     const sampler = new MeshSurfaceSampler(mesh).build();
     const col = mesh.material.color;
-    const part = mesh.userData.part;
-    const base = part === 'floor' ? 0.5 : part === 'wall' ? 0.6 : 1.4;
     for (let i = 0; i < count && k < total; i++, k++) {
       sampler.sample(p, n);
       p.applyMatrix4(mesh.matrixWorld);
       target.set([p.x, p.y, p.z], k * 3);
-      // a raw capture: points strewn around where they belong, drifting up
-      const r = 0.5 + rng() * 2.2;
-      const th = rng() * Math.PI * 2, ph = Math.acos(2 * rng() - 1);
-      start.set([
-        p.x + r * Math.sin(ph) * Math.cos(th),
-        p.y + 0.8 + r * Math.cos(ph),
-        p.z + r * Math.sin(ph) * Math.sin(th),
-      ], k * 3);
-      const jitter = 0.66 + rng() * 0.16; // darker than the surface, like a raw scan
+      const jitter = 0.66 + Math.random() * 0.16; // darker than the surface, like a raw scan
       color.set([col.r * jitter, col.g * jitter, col.b * jitter], k * 3);
-      delay[k] = base + (p.y / 2.7) * 0.25 + rng() * 0.3;
+      owner[k] = mi;
     }
   });
+  return { target, color, owner, count: k };
+}
+
+export function pointsMaterial() {
+  return new THREE.PointsMaterial({
+    size: 0.042, map: dotTexture(), alphaTest: 0.4, transparent: true, depthWrite: false,
+    vertexColors: true, sizeAttenuation: true, opacity: 0,
+  });
+}
+
+// The hero's cloud: every point also gets a scattered start and a delay, so
+// the floor and walls settle first and the furniture after.
+function buildCloud(meshes, total) {
+  const { target, color, owner, count } = samplePoints(meshes, total);
+  const start = new Float32Array(total * 3), delay = new Float32Array(total);
+  const rng = () => Math.random();
+  for (let k = 0; k < count; k++) {
+    const j = k * 3;
+    const part = meshes[owner[k]].userData.part;
+    const base = part === 'floor' ? 0.5 : part === 'wall' ? 0.6 : 1.4;
+    const r = 0.5 + rng() * 2.2;
+    const th = rng() * Math.PI * 2, ph = Math.acos(2 * rng() - 1);
+    start[j] = target[j] + r * Math.sin(ph) * Math.cos(th);
+    start[j + 1] = target[j + 1] + 0.8 + r * Math.cos(ph);
+    start[j + 2] = target[j + 2] + r * Math.sin(ph) * Math.sin(th);
+    delay[k] = base + (target[j + 1] / 2.7) * 0.25 + rng() * 0.3;
+  }
   const geo = new THREE.BufferGeometry();
   const posAttr = new THREE.BufferAttribute(start.slice(), 3);
   geo.setAttribute('position', posAttr);
   geo.setAttribute('color', new THREE.BufferAttribute(color, 3));
-  const mat = new THREE.PointsMaterial({
-    size: 0.042, map: dotTexture(), alphaTest: 0.4, transparent: true, depthWrite: false,
-    vertexColors: true, sizeAttenuation: true, opacity: 0,
-  });
-  const points = new THREE.Points(geo, mat);
+  const points = new THREE.Points(geo, pointsMaterial());
   points.frustumCulled = false;
-  return { points, start, target, delay, pos: posAttr, count: k };
+  return { points, start, target, delay, pos: posAttr, count };
 }
 
-// opts.loop: milliseconds to hold the finished room before replaying.
-// opts.restyle: a theme to fade the finished room into (the "redesigned" beat).
 export function createHero(canvas, ui = {}, opts = {}) {
   const S = createScene(canvas, THEMES.original);
   for (const it of LAYOUTS.original) {

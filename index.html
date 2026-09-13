@@ -92,6 +92,7 @@
         <canvas id="hero-canvas" aria-label="A bedroom assembling itself from scanned points"></canvas>
         <div class="stage__status"><span class="dot"></span><span id="hero-status">Reading frames</span></div>
         <button class="tool stage__replay" id="hero-replay" type="button">Replay</button>
+        <span class="stage__tag">Animation · real rooms soon</span>
       </div>
       <p class="stage__caption">From the points in your video to a room you can edit. Drag to look around.</p>
     </div>
@@ -145,6 +146,7 @@
       <div class="stage stage--tall" id="editor-stage">
         <canvas id="editor-canvas" aria-label="An editable 3D room"></canvas>
         <p class="stage__hint" id="editor-hint">Click a piece to select it, then drag it across the floor.</p>
+        <span class="stage__tag">Example room · real rooms soon</span>
         <div class="stage__label" id="editor-label" hidden></div>
         <div class="toolbar" id="editor-toolbar">
           <button class="tool" type="button" data-act="add">Add</button>
@@ -184,6 +186,7 @@
     <div class="redesign__panel reveal" style="--d:.15s">
       <div class="stage stage--wide" id="redesign-stage">
         <canvas id="redesign-canvas" aria-label="The same room, restyled"></canvas>
+        <span class="stage__tag">Example room · real rooms soon</span>
         <div class="compare" role="group" aria-label="Compare">
           <button type="button" data-view="before">Before</button>
           <button type="button" data-view="after" class="is-on">After</button>

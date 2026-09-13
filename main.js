@@ -4,7 +4,7 @@
 import { createHero } from './hero.js';
 import { THEMES } from './room.js';
 import { createEditor, createRedesign } from './editor.js';
-import { createWalkthrough } from './walkthrough.js';
+import { createScanExample } from './scan.js';
 
 // Where suggestions go. With no endpoint, the form opens the visitor's mail
 // app addressed to CONTACT with the suggestion filled in. To collect them
@@ -168,9 +168,11 @@ mount('redesign-stage', (canvas, stage) => createRedesign(canvas, {
 }));
 
 // ------------------------------------------------- the examples page
-mount('walk-stage', (canvas) => createWalkthrough(canvas, {
-  clock: $('#walk-clock'), bar: $('#walk-bar'),
+// Both panels read one clock, so the room on the right builds as the phone on
+// the left walks; the controller is made once, by whichever stage shows first.
+let scan = null;
+const scanExample = () => (scan ??= createScanExample({
+  clock: $('#walk-clock'), bar: $('#walk-bar'), rec: $('#walk-rec'), status: $('#result-status'),
 }));
-mount('result-stage', (canvas) => createHero(canvas, { status: $('#result-status') }, {
-  loop: 7500, restyle: THEMES.warm,
-}));
+mount('walk-stage', (canvas) => scanExample().walk(canvas));
+mount('result-stage', (canvas) => scanExample().result(canvas));

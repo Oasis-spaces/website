@@ -60,7 +60,11 @@
         <p class="eyebrow reveal">Examples</p>
         <h1 class="display-2 reveal" style="--d:.1s">One room, start to finish.</h1>
       </div>
-      <p class="body reveal" style="--d:.2s">On the left, what the phone sees. On the right, what comes back: the room rebuilt from that video, to scale, and then restyled. This is the example room the previews on the home page use; real captures will take its place here as we film them.</p>
+      <p class="body reveal" style="--d:.2s">On the left, what the phone sees. On the right, the room taking shape as the phone scans it: points where the camera has looked, the floor and walls first, then each piece as it is found.</p>
+    </div>
+    <div class="notice reveal" style="--d:.25s" role="note">
+      <span class="notice__tag">Animation</span>
+      <p>This is an animation of the example room, not a real capture. Real rooms, filmed on a phone and rebuilt by Oasis-spaces, will appear here soon.</p>
     </div>
 
     <article class="example reveal" style="--d:.15s">
@@ -69,7 +73,7 @@
         <div class="phone">
           <div class="phone__screen" id="walk-stage">
             <canvas id="walk-canvas" aria-label="A simulated phone video walking through a bedroom"></canvas>
-            <div class="rec"><span class="rec__dot"></span>REC <span id="walk-clock">00:00</span></div>
+            <div class="rec" id="walk-rec"><span class="rec__dot"></span>REC <span id="walk-clock">00:00</span></div>
             <div class="phone__bar"><i id="walk-bar"></i></div>
           </div>
         </div>
@@ -80,9 +84,9 @@
         <p class="example__label"><span class="num">02</span>The result</p>
         <div class="stage stage--wide" id="result-stage">
           <canvas id="result-canvas" aria-label="The same room rebuilt from scan points, then restyled"></canvas>
-          <div class="stage__status"><span class="dot"></span><span id="result-status">Reading frames</span></div>
+          <div class="stage__status"><span class="dot"></span><span id="result-status">Scanning · finding the floor and walls</span></div>
         </div>
-        <p class="stage__caption">Scan points settle onto the floor and walls, then the furniture; the solid room fades in, then a restyle is applied. Loops on its own.</p>
+        <p class="stage__caption">The room builds as the phone walks: scan points appear where it has looked, the floor and walls solidify, and each piece pops in once the camera has seen it. Loops with the video.</p>
         <dl class="example__facts">
           <div><dt>Input</dt><dd>26 s phone video</dd></div>
           <div><dt>Room</dt><dd>4.4 × 3.8 m, measured</dd></div>
