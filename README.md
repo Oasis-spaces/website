@@ -15,6 +15,24 @@ jsdelivr — there are no model files.
 
 then open http://localhost:8735.
 
+## Room planner (Python backend)
+
+`planner/` is a to-scale floor-plan page backed by a Python server in `server/`
+(standard library only, nothing to install):
+
+    python3 server/app.py        # http://localhost:8735/planner/
+    python3 -m unittest discover -s tests
+
+The server also serves the rest of the site, so it replaces `http.server`
+above. `server/planner.py` does the geometry: collision and wall checks, door
+swing, a flood-fill walkability test from the doorway, paint/flooring/cost
+estimates and a greedy auto-arranger. `/api/arrange` streams each placement as
+Server-Sent Events. The server validates input, caps request size, rate-limits
+per client, sends a CSP, and serves only whitelisted static files.
+
+Render's static site (below) cannot run Python, so `/planner/` needs a Render
+Web Service (`python3 server/app.py`, honours `PORT`) to work in production.
+
 ## Deploy
 
 Hosted on Render as a free static site from `render.yaml` (publish path `.`,
